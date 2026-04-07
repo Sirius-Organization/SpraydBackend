@@ -1,0 +1,31 @@
+meta {
+  name: Upload Artist Avatar
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/artists/{{artistId}}/avatar
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  img: @file(/Users/h4sh/Desktop/XXXL.webp)
+}
+
+vars:pre-request {
+  artistId: 00000000-0000-0000-0000-000000000001
+}
+
+docs {
+  Uploads an avatar image for an artist. Returns the updated artist.
+
+  Response: ArtistResponse
+  {
+    "id": "UUID",
+    "name": "string",
+    "bio": "string",
+    "imagePath": "https://host/images/<filename>"
+  }
+}

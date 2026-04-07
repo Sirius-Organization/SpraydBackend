@@ -1,0 +1,34 @@
+meta {
+  name: Upload Art Image
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/art-items/{{itemId}}/images
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  img: @file(/Users/h4sh/Desktop/XXXL.webp)
+  userId: 00000000-0000-0000-0000-000000000001
+}
+
+vars:pre-request {
+  itemId: 91DD153C-6C04-4ACB-A396-AB7186F54111
+}
+
+docs {
+  Uploads an image for an art item. Returns the created image record.
+  
+  Response: ArtImageResponse
+  {
+    "id": "UUID",
+    "artItemId": "UUID",
+    "img": "base64",
+    "date": "ISO8601",
+    "timeStamp": 0.0,
+    "userId": "UUID"
+  }
+}

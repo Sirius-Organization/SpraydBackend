@@ -1,0 +1,42 @@
+meta {
+  name: Create Art Item
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/art-items
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Burunduk",
+    "itemDescription": "A piece of street art",
+    "location": "Yekaterinburg, Popova 9",
+    "latitude": 56.838011,
+    "longitude": 60.597465,
+    "author": "Unknown",
+    "state": "new",
+    "category": "graffiti"
+  }
+}
+
+docs {
+  Creates a new art item. Returns the created item (image will be null).
+
+  Response: ArtItemResponse
+  {
+    "id": "UUID",
+    "name": "string",
+    "itemDescription": "string",
+    "location": "string",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "author": "string",
+    "state": "string",
+    "category": "string",
+    "image": null
+  }
+}
