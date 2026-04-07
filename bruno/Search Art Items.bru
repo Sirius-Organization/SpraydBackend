@@ -1,0 +1,36 @@
+meta {
+  name: Search Art Items
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/art-items/search?q=graffiti
+  body: none
+  auth: none
+}
+
+params:query {
+  q: graffiti
+}
+
+docs {
+  Searches art items by name or description (case-insensitive).
+
+  Query params:
+    q: search string (required)
+
+  Response: [ArtItemListResponse]
+  {
+    "id": "UUID",
+    "name": "string",
+    "itemDescription": "string",
+    "location": "string",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "author": "string",
+    "state": "string",
+    "category": "string",
+    "firstImageUrl": "string" | null
+  }
+}

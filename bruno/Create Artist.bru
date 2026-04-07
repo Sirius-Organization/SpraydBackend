@@ -1,0 +1,31 @@
+meta {
+  name: Create Artist
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/artists
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Pokras Lampas",
+    "bio": "Street artist",
+    "imagePath": null
+  }
+}
+
+docs {
+  Creates a new artist. Returns the created artist.
+  
+  Response: ArtistResponse
+  {
+    "id": "UUID",
+    "name": "string",
+    "bio": "string",
+    "imagePath": "string | null"
+  }
+}
