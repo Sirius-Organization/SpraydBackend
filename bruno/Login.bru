@@ -1,0 +1,31 @@
+meta {
+  name: Login
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: test@example.com
+  password: Password1
+}
+
+script:post-response {
+  bru.setVar("token", res.getBody().token);
+}
+
+docs {
+  Login with email and password using HTTP Basic Auth.
+  On success, saves the returned token to the collection variable {{token}},
+  which is used automatically by the Upload Art Image request.
+
+  Response: 200
+  {
+    "token": "string"
+  }
+}

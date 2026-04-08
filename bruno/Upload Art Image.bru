@@ -7,12 +7,15 @@ meta {
 post {
   url: {{baseUrl}}/art-items/{{itemId}}/images
   body: multipartForm
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
 }
 
 body:multipart-form {
   img: @file(/Users/h4sh/Desktop/XXXL.webp)
-  userId: 00000000-0000-0000-0000-000000000001
 }
 
 vars:pre-request {
