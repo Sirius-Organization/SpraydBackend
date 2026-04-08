@@ -18,6 +18,9 @@ struct AuthController: RouteCollection {
 
         let basicAuth = auth.grouped(User.authenticator(), User.guardMiddleware())
         basicAuth.post("login", use: login)
+
+        let tokenAuth = auth.grouped(UserToken.authenticator(), UserToken.guardMiddleware())
+        tokenAuth.post("logout", use: logout)
     }
 
     // POST /auth/register
@@ -55,5 +58,12 @@ struct AuthController: RouteCollection {
         let token = try UserToken.generate(for: user)
         try await token.save(on: req.db)
         return UserTokenResponse(token: token.value)
+    }
+
+    // POST /auth/logout  (Bearer Token)
+    func logout(req: Request) async throws -> HTTPStatus {
+        let token = try req.auth.require(UserToken.self)
+        try await token.delete(on: req.db)
+        return .ok
     }
 }
