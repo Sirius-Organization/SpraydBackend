@@ -1,0 +1,29 @@
+meta {
+  name: Create Category
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/categories
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Мурал",
+    "slug": "mural"
+  }
+}
+
+docs {
+  Creates a new category. Returns the created category.
+  
+  Response: CategoryResponse
+  {
+    "id": "UUID",
+    "name": "string",
+    "slug": "string"
+  }
+}

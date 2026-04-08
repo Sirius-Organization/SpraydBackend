@@ -42,6 +42,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateArtItem())
     app.migrations.add(CreateArtImage())
     app.migrations.add(CreateArtist())
+    app.migrations.add(CreateCategory())
     app.migrations.add(CreateUser())
     app.migrations.add(CreateUserToken())
 

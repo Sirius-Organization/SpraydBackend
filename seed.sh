@@ -5,6 +5,8 @@ BASE_URL="${BASE_URL:-http://localhost:8080}"
 EMAIL="${EMAIL:-test@example.com}"
 PASSWORD="${PASSWORD:-Password1}"
 SEED_FILE="${1:-seed.json}"
+ARTISTS_SEED_FILE="${ARTISTS_SEED_FILE:-artists.seed.json}"
+CATEGORIES_SEED_FILE="${CATEGORIES_SEED_FILE:-categories.seed.json}"
 
 if ! command -v jq &>/dev/null; then
   echo "Error: jq is required. Install with: brew install jq"
@@ -14,6 +16,18 @@ fi
 if [[ ! -f "$SEED_FILE" ]]; then
   echo "Error: seed file not found: $SEED_FILE"
   exit 1
+fi
+
+# Seed categories first so reference data exists before items are inspected in clients.
+if [[ -f "categories.seed.sh" && -f "$CATEGORIES_SEED_FILE" ]]; then
+  echo "Seeding categories from $CATEGORIES_SEED_FILE..."
+  BASE_URL="$BASE_URL" ./categories.seed.sh "$CATEGORIES_SEED_FILE"
+fi
+
+# Seed artists before art items for the same reason.
+if [[ -f "artists.seed.sh" && -f "$ARTISTS_SEED_FILE" ]]; then
+  echo "Seeding artists from $ARTISTS_SEED_FILE..."
+  BASE_URL="$BASE_URL" ./artists.seed.sh "$ARTISTS_SEED_FILE"
 fi
 
 # Login

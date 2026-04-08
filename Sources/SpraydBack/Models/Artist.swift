@@ -32,4 +32,3 @@ final class Artist: Model, Content, @unchecked Sendable {
         self.imagePath = imagePath
     }
 }
-	
