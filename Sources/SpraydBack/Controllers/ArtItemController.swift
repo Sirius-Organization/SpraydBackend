@@ -17,6 +17,10 @@ struct UploadArtImageRequest: Content {
     var img: Data
 }
 
+struct AddImageUrlRequest: Content {
+    var url: String
+}
+
 struct ArtItemListResponse: Content {
     var id: UUID?
     var name: String
@@ -83,6 +87,7 @@ struct ArtItemController: RouteCollection {
         let tokenProtected = artItems.grouped(UserToken.authenticator(), UserToken.guardMiddleware())
         tokenProtected.group(":id") { item in
             item.post("images", use: uploadImage)
+            item.post("image-url", use: addImageUrl)
         }
     }
 
@@ -164,6 +169,26 @@ struct ArtItemController: RouteCollection {
         )
         try await item.save(on: req.db)
         return ArtItemListResponse(item: item, req: req)
+    }
+
+    // POST /art-items/:id/image-url  (requires Bearer token)
+    func addImageUrl(req: Request) async throws -> ArtImageResponse {
+        let user = try req.auth.require(User.self)
+        let userId = try user.requireID()
+        guard let itemId = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest, reason: "Invalid ID")
+        }
+        guard try await ArtItem.find(itemId, on: req.db) != nil else {
+            throw Abort(.notFound, reason: "ArtItem not found")
+        }
+        let body = try req.content.decode(AddImageUrlRequest.self)
+        guard body.url.hasPrefix("http://") || body.url.hasPrefix("https://"),
+              URL(string: body.url) != nil else {
+            throw Abort(.badRequest, reason: "url must be a valid http/https URL")
+        }
+        let image = ArtImage(artItemID: itemId, imagePath: body.url, userId: userId)
+        try await image.save(on: req.db)
+        return image.asResponse(req: req)
     }
 
     // POST /art-items/:id/images  (requires Bearer token)

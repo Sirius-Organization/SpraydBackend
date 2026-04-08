@@ -78,12 +78,18 @@ struct ArtImageResponse: Content {
 
 extension ArtImage {
     func asResponse(req: Request) -> ArtImageResponse {
-        let host = req.headers.first(name: .host) ?? "localhost:8080"
-        let scheme = req.application.http.server.configuration.tlsConfiguration != nil ? "https" : "http"
+        let url: String
+        if imagePath.hasPrefix("http://") || imagePath.hasPrefix("https://") {
+            url = imagePath
+        } else {
+            let host = req.headers.first(name: .host) ?? "localhost:8080"
+            let scheme = req.application.http.server.configuration.tlsConfiguration != nil ? "https" : "http"
+            url = "\(scheme)://\(host)/images/\(imagePath)"
+        }
         return ArtImageResponse(
             id: self.id,
             artItemId: self.$artItem.id,
-            url: "\(scheme)://\(host)/images/\(self.imagePath)",
+            url: url,
             date: self.date,
             timeStamp: self.timeStamp,
             userId: self.userId

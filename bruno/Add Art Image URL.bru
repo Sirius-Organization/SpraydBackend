@@ -1,0 +1,39 @@
+meta {
+  name: Add Art Image URL
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/art-items/{{itemId}}/image-url
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "url": "https://example.com/photo.jpg"
+  }
+}
+
+vars:pre-request {
+  itemId: A1B9E076-0703-4376-B3D1-3A8D12B207DD
+}
+
+docs {
+  Adds an image by external URL for an art item. The URL is stored as-is — no file is downloaded or saved on the server.
+
+  Response: ArtImageResponse
+  {
+    "id": "UUID",
+    "artItemId": "UUID",
+    "url": "https://...",
+    "date": "ISO8601",
+    "timeStamp": 0.0,
+    "userId": "UUID"
+  }
+}
