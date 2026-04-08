@@ -7,15 +7,14 @@ import FluentPostgresDriver
 public func configure(_ app: Application) async throws {
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
-//    let certPath = "/etc/letsencrypt/live/sprayd.ru/fullchain.pem"
-//    let keyPath = "/etc/letsencrypt/live/sprayd.ru/privkey.pem"
-//
-//    app.http.server.configuration.tlsConfiguration = .makeServerConfiguration(
-//        certificateChain: try NIOSSLCertificate.fromPEMFile(certPath).map { .certificate($0) },
-//        privateKey: .privateKey(try NIOSSLPrivateKey(file: keyPath, format: .pem))
-//    )
-//
-//    app.http.server.configuration.port = 443
+    let certPath = "/etc/letsencrypt/live/sprayd.ru/fullchain.pem"
+    let keyPath = "/etc/letsencrypt/live/sprayd.ru/privkey.pem"
+
+    app.http.server.configuration.tlsConfiguration = .makeServerConfiguration(
+        certificateChain: try NIOSSLCertificate.fromPEMFile(certPath).map { .certificate($0) },
+        privateKey: .privateKey(try NIOSSLPrivateKey(file: keyPath, format: .pem))
+    )
+    app.http.server.configuration.port = 443
 
     app.routes.defaultMaxBodySize = "10mb"
 
