@@ -42,6 +42,8 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateArtItem())
     app.migrations.add(CreateArtImage())
     app.migrations.add(CreateArtist())
+    app.migrations.add(CreateUser())
+    app.migrations.add(CreateUserToken())
 
     // run migrations
     try await app.autoMigrate()

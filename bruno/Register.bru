@@ -1,0 +1,29 @@
+meta {
+  name: Register
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "test@example.com",
+    "password": "Password1"
+  }
+}
+
+docs {
+  Register a new user. Password must be at least 8 characters and contain
+  at least 2 different character classes (uppercase, lowercase, digits, special).
+
+  Response: User.Public (201)
+  {
+    "id": "UUID",
+    "email": "string"
+  }
+}
