@@ -1,0 +1,22 @@
+meta {
+  name: Get Categories
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/categories
+  body: none
+  auth: none
+}
+
+docs {
+  Returns all categories.
+
+  Response: [CategoryResponse]
+  {
+    "id": "UUID",
+    "name": "string",
+    "slug": "string"
+  }
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Get Artists
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/artists
+  body: none
+  auth: none
+}
+
+docs {
+  Returns all artists.
+
+  Response: [ArtistResponse]
+  {
+    "id": "UUID",
+    "name": "string",
+    "bio": "string",
+    "imagePath": "string | null"
+  }
+}

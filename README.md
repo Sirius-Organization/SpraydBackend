@@ -81,6 +81,11 @@ swift test
 | POST | /art-items | Create art item |
 | GET | /art-items/:id | Single art item |
 | POST | /art-items/:id/images | Upload image for item |
+| GET | /artists | All artists |
+| POST | /artists | Create artist |
+| POST | /artists/:id/avatar | Upload artist avatar |
+| GET | /categories | All categories |
+| POST | /categories | Create category |
 
 API requests can be tested using the Bruno collection in the `bruno/` directory.
 
