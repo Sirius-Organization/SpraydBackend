@@ -1,0 +1,47 @@
+meta {
+  name: Update User
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/users/me
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "username": "new_username",
+    "bio": "Street art lover and explorer"
+  }
+}
+
+docs {
+  Partially updates the current user's profile. All fields are optional.
+
+  Fields:
+  - username: string — must be non-empty and unique
+  - bio: string
+  - avatar: bytes (binary)
+  - currentPassword + newPassword: string (both required together to change password;
+    new password must be ≥8 chars with at least 2 character classes)
+
+  Changing password revokes all active tokens.
+
+  Response: User.Public
+  {
+    "id": "UUID",
+    "email": "string",
+    "username": "string",
+    "bio": "string",
+    "avatar": "https://host/images/<filename> | null",
+    "posted": ["UUID"],
+    "visited": ["UUID"],
+    "liked": ["UUID"]
+  }
+}

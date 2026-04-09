@@ -1,0 +1,42 @@
+meta {
+  name: Update Art Item
+  type: http
+  seq: 9
+}
+
+patch {
+  url: {{baseUrl}}/art-items/{{itemId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "Burunduk Updated",
+    "state": "exists"
+  }
+}
+
+vars:pre-request {
+  itemId: A1B9E076-0703-4376-B3D1-3A8D12B207DD
+}
+
+docs {
+  Partially updates an art item by ID. Only fields provided in the body are updated.
+
+  All fields are optional:
+  - name: string
+  - itemDescription: string
+  - location: string
+  - latitude: number
+  - longitude: number
+  - author: string
+  - state: "new" | "exists" | "moderated"
+  - category: string
+
+  Response: ArtItemResponse (includes images array)
+}

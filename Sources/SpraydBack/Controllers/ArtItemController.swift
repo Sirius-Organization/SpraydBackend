@@ -2,6 +2,17 @@ import Vapor
 import Fluent
 import Foundation
 
+struct UpdateArtItemRequest: Content {
+    var name: String?
+    var itemDescription: String?
+    var location: String?
+    var latitude: Double?
+    var longitude: Double?
+    var author: String?
+    var state: String?
+    var category: String?
+}
+
 struct CreateArtItemRequest: Content {
     var name: String
     var itemDescription: String
@@ -86,6 +97,7 @@ struct ArtItemController: RouteCollection {
 
         let tokenProtected = artItems.grouped(UserToken.authenticator(), UserToken.guardMiddleware())
         tokenProtected.group(":id") { item in
+            item.patch(use: update)
             item.post("images", use: uploadImage)
             item.post("image-url", use: addImageUrl)
             item.delete(use: deleteItem)
@@ -170,6 +182,36 @@ struct ArtItemController: RouteCollection {
         )
         try await item.save(on: req.db)
         return ArtItemListResponse(item: item, req: req)
+    }
+
+    // PATCH /art-items/:id  (requires Bearer token)
+    func update(req: Request) async throws -> ArtItemResponse {
+        guard let id = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest, reason: "Invalid ID")
+        }
+        guard let item = try await ArtItem.query(on: req.db)
+            .filter(\.$id == id)
+            .with(\.$images)
+            .first()
+        else {
+            throw Abort(.notFound)
+        }
+        let body = try req.content.decode(UpdateArtItemRequest.self)
+        if let name = body.name { item.name = name }
+        if let desc = body.itemDescription { item.itemDescription = desc }
+        if let location = body.location { item.location = location }
+        if let lat = body.latitude { item.latitude = lat }
+        if let lng = body.longitude { item.longitude = lng }
+        if let author = body.author { item.author = author }
+        if let stateStr = body.state {
+            guard let state = ArtState(rawValue: stateStr) else {
+                throw Abort(.badRequest, reason: "Invalid state value")
+            }
+            item.state = state
+        }
+        if let category = body.category { item.category = category }
+        try await item.save(on: req.db)
+        return ArtItemResponse(item: item, req: req)
     }
 
     // POST /art-items/:id/image-url  (requires Bearer token)
