@@ -1,8 +1,14 @@
 import Vapor
 
 func routes(_ app: Application) throws {
-    try app.register(collection: AuthController())
-    try app.register(collection: ArtItemController())
-    try app.register(collection: ArtistController())
-    try app.register(collection: CategoryController())
+    let api = app.grouped("api", "v1")
+    let collections: [any RouteCollection] = [
+        AuthController(),
+        ArtItemController(),
+        ArtistController(),
+        CategoryController()
+    ]
+    for collection in collections {
+        try api.register(collection: collection)
+    }
 }

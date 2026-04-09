@@ -88,6 +88,7 @@ struct ArtItemController: RouteCollection {
         tokenProtected.group(":id") { item in
             item.post("images", use: uploadImage)
             item.post("image-url", use: addImageUrl)
+            item.delete(use: deleteItem)
         }
     }
 
@@ -189,6 +190,28 @@ struct ArtItemController: RouteCollection {
         let image = ArtImage(artItemID: itemId, imagePath: body.url, userId: userId)
         try await image.save(on: req.db)
         return image.asResponse(req: req)
+    }
+
+    // DELETE /art-items/:id  (requires Bearer token)
+    func deleteItem(req: Request) async throws -> HTTPStatus {
+        guard let id = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest, reason: "Invalid ID")
+        }
+        guard let item = try await ArtItem.query(on: req.db)
+            .filter(\.$id == id)
+            .with(\.$images)
+            .first()
+        else {
+            throw Abort(.notFound)
+        }
+        let imagesDir = req.application.directory.publicDirectory + "images/"
+        for image in item.images {
+            guard !image.imagePath.hasPrefix("http://"), !image.imagePath.hasPrefix("https://") else { continue }
+            let filePath = imagesDir + image.imagePath
+            try? FileManager.default.removeItem(atPath: filePath)
+        }
+        try await item.delete(on: req.db)
+        return .noContent
     }
 
     // POST /art-items/:id/images  (requires Bearer token)
