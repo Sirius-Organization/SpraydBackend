@@ -1,0 +1,31 @@
+meta {
+  name: Get User by ID
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  userId: 00000000-0000-0000-0000-000000000001
+}
+
+docs {
+  Returns a user profile by id.
+
+  Response: User.Public
+  {
+    "id": "UUID",
+    "email": "string",
+    "username": "string",
+    "bio": "string",
+    "avatar": "https://host/images/<filename> | null",
+    "posted": ["UUID"],
+    "visited": ["UUID"],
+    "liked": ["UUID"]
+  }
+}

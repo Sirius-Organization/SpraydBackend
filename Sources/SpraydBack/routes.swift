@@ -4,6 +4,7 @@ func routes(_ app: Application) throws {
     let api = app.grouped("api", "v1")
     let collections: [any RouteCollection] = [
         AuthController(),
+        UserService(),
         ArtItemController(),
         ArtistController(),
         CategoryController()

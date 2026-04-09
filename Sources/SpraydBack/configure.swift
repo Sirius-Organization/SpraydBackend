@@ -46,6 +46,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateArtist())
     app.migrations.add(CreateCategory())
     app.migrations.add(CreateUser())
+    app.migrations.add(AddUserProfileFields())
     app.migrations.add(CreateUserToken())
 
     // wipe and recreate schema on each test run for isolation
