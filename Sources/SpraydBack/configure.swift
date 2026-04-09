@@ -48,6 +48,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateUser())
     app.migrations.add(AddUserProfileFields())
     app.migrations.add(CreateUserToken())
+    app.migrations.add(AddArtItemCreatedAt())
 
     // wipe and recreate schema on each test run for isolation
     if app.environment == .testing {

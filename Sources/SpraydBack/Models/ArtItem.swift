@@ -34,6 +34,9 @@ final class ArtItem: Model, Content, @unchecked Sendable {
     @Field(key: "category")
     var category: String
 
+    @Field(key: "created_at")
+    var createdAt: Date?
+
     init() {}
 
     init(

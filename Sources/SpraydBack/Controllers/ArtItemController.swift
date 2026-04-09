@@ -11,6 +11,7 @@ struct UpdateArtItemRequest: Content {
     var author: String?
     var state: String?
     var category: String?
+    var createdAt: Date?
 }
 
 struct CreateArtItemRequest: Content {
@@ -42,6 +43,7 @@ struct ArtItemListResponse: Content {
     var author: String
     var state: String
     var category: String
+    var createdAt: Date?
     var firstImageUrl: String?
 
     init(item: ArtItem, req: Request) {
@@ -54,6 +56,7 @@ struct ArtItemListResponse: Content {
         self.author = item.author
         self.state = item.stateRawValue
         self.category = item.category
+        self.createdAt = item.createdAt
         self.firstImageUrl = item.$images.value?.first?.asResponse(req: req).url
     }
 }
@@ -68,6 +71,7 @@ struct ArtItemResponse: Content {
     var author: String
     var state: String
     var category: String
+    var createdAt: Date?
     var images: [ArtImageResponse]
 
     init(item: ArtItem, req: Request) {
@@ -80,6 +84,7 @@ struct ArtItemResponse: Content {
         self.author = item.author
         self.state = item.stateRawValue
         self.category = item.category
+        self.createdAt = item.createdAt
         self.images = item.$images.value?.map { $0.asResponse(req: req) } ?? []
     }
 }
@@ -210,6 +215,7 @@ struct ArtItemController: RouteCollection {
             item.state = state
         }
         if let category = body.category { item.category = category }
+        if let createdAt = body.createdAt { item.createdAt = createdAt }
         try await item.save(on: req.db)
         return ArtItemResponse(item: item, req: req)
     }
