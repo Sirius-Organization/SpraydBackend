@@ -23,7 +23,7 @@ for i in $(seq 0 $((TOTAL - 1))); do
 
   echo ""
   echo "[$((i+1))/$TOTAL] Creating: $NAME"
-  RESPONSE=$(curl -sf -X POST "$BASE_URL/categories" \
+  RESPONSE=$(curl -sf -X POST "$BASE_URL/api/v1/categories" \
     -H "Content-Type: application/json" \
     -d "$CATEGORY")
 

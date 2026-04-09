@@ -32,7 +32,7 @@ fi
 
 # Login
 echo "Logging in as $EMAIL..."
-TOKEN=$(curl -sf -X POST "$BASE_URL/auth/login" \
+TOKEN=$(curl -sf -X POST "$BASE_URL/api/v1/auth/login" \
   -u "$EMAIL:$PASSWORD" | jq -r '.token')
 
 if [[ -z "$TOKEN" || "$TOKEN" == "null" ]]; then
@@ -53,7 +53,7 @@ for i in $(seq 0 $((TOTAL - 1))); do
 
   echo ""
   echo "[$((i+1))/$TOTAL] Creating: $NAME"
-  RESPONSE=$(curl -sf -X POST "$BASE_URL/art-items" \
+  RESPONSE=$(curl -sf -X POST "$BASE_URL/api/v1/art-items" \
     -H "Content-Type: application/json" \
     -d "$PAYLOAD")
 
@@ -69,7 +69,7 @@ for i in $(seq 0 $((TOTAL - 1))); do
   for j in $(seq 0 $((URL_COUNT - 1))); do
     IMG_URL=$(echo "$IMAGE_URLS" | jq -r ".[$j]")
     echo "  Adding image URL: $IMG_URL"
-    curl -sf -X POST "$BASE_URL/art-items/$ITEM_ID/image-url" \
+    curl -sf -X POST "$BASE_URL/api/v1/art-items/$ITEM_ID/image-url" \
       -H "Authorization: Bearer $TOKEN" \
       -H "Content-Type: application/json" \
       -d "{\"url\": \"$IMG_URL\"}" >/dev/null

@@ -1,0 +1,26 @@
+meta {
+  name: Delete Art Item
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{baseUrl}}/art-items/{{itemId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  itemId: A1B9E076-0703-4376-B3D1-3A8D12B207DD
+}
+
+docs {
+  Deletes an art item by ID. Local images stored on the server are also deleted from disk.
+  URL-based images are only removed from the database.
+
+  Response: 204 No Content
+}

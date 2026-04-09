@@ -24,7 +24,9 @@ public func configure(_ app: Application) async throws {
     let dbPort = Int(Environment.get("DB_PORT") ?? "5432") ?? 5432
     let dbUser = Environment.get("DB_USERNAME") ?? "vapor"
     let dbPass = Environment.get("DB_PASSWORD") ?? ""
-    let dbName = Environment.get("DB_NAME") ?? "spraydback"
+    let dbName = app.environment == .testing
+        ? (Environment.get("DB_TEST_NAME") ?? "spraydback_test")
+        : (Environment.get("DB_NAME") ?? "spraydback")
 
     app.databases.use(
         .postgres(configuration: SQLPostgresConfiguration(
@@ -46,7 +48,10 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateUser())
     app.migrations.add(CreateUserToken())
 
-    // run migrations
+    // wipe and recreate schema on each test run for isolation
+    if app.environment == .testing {
+        try await app.autoRevert()
+    }
     try await app.autoMigrate()
 
     // register routes
