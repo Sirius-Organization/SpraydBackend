@@ -1,0 +1,37 @@
+meta {
+  name: Change Username
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/users/me/username
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "username": "new_username"
+  }
+}
+
+docs {
+  Updates current user's username.
+
+  Response: User.Public
+  {
+    "id": "UUID",
+    "email": "string",
+    "username": "string",
+    "bio": "string",
+    "avatar": "https://host/images/<filename> | null",
+    "posted": ["UUID"],
+    "visited": ["UUID"],
+    "liked": ["UUID"]
+  }
+}

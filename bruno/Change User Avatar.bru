@@ -1,0 +1,35 @@
+meta {
+  name: Change User Avatar
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/users/me/avatar
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:multipart-form {
+  img: @file(/Users/h4sh/Desktop/XXXL.webp)
+}
+
+docs {
+  Uploads a new avatar for current user.
+
+  Response: User.Public
+  {
+    "id": "UUID",
+    "email": "string",
+    "username": "string",
+    "bio": "string",
+    "avatar": "https://host/images/<filename> | null",
+    "posted": ["UUID"],
+    "visited": ["UUID"],
+    "liked": ["UUID"]
+  }
+}
