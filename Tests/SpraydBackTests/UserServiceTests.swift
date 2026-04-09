@@ -6,6 +6,27 @@ import Fluent
 @Suite("UserService API", .serialized)
 struct UserServiceTests {
 
+    @Test("GET /users/me returns current user for valid token")
+    func getCurrentUser() async throws {
+        try await withTestApp { app in
+            let (user, token) = try await seedUser(on: app.db)
+            let userId = try user.requireID()
+
+            try await app.testing().test(.GET, "api/v1/users/me",
+                beforeRequest: { req async throws in
+                    req.headers.bearerAuthorization = .init(token: token.value)
+                },
+                afterResponse: { res async throws in
+                    #expect(res.status == .ok)
+                    let payload = try res.content.decode(User.Public.self)
+                    #expect(payload.id == userId)
+                    #expect(payload.email == "test@example.com")
+                    #expect(payload.username == "test")
+                }
+            )
+        }
+    }
+
     @Test("GET /users/:id returns user profile with defaults")
     func getUserById() async throws {
         try await withTestApp { app in

@@ -32,17 +32,19 @@ struct ChangePasswordRequest: Content {
 struct UserService: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
         let users = routes.grouped("users")
-        users.group(":id") { user in
-            user.get(use: getUserById)
-        }
 
         let tokenProtected = users.grouped(UserToken.authenticator(), UserToken.guardMiddleware())
         tokenProtected.group("me") { me in
+            me.get(use: getCurrentUser)
             me.patch("username", use: changeUsername)
             me.patch("bio", use: changeBio)
             me.post("avatar", use: changeAvatar)
             me.patch("password", use: changePassword)
             me.delete(use: deleteAccount)
+        }
+
+        users.group(":id") { user in
+            user.get(use: getUserById)
         }
     }
 
@@ -54,6 +56,12 @@ struct UserService: RouteCollection {
         guard let user = try await User.find(id, on: req.db) else {
             throw Abort(.notFound)
         }
+        return user.asPublic(req: req)
+    }
+
+    // GET /users/me (requires Bearer token)
+    func getCurrentUser(req: Request) async throws -> User.Public {
+        let user = try req.auth.require(User.self)
         return user.asPublic(req: req)
     }
 
