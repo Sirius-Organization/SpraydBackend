@@ -186,7 +186,14 @@ struct ArtItemController: RouteCollection {
             category: body.category
         )
         try await item.save(on: req.db)
-        return ArtItemListResponse(item: item, req: req)
+        guard let saved = try await ArtItem.query(on: req.db)
+            .filter(\.$id == item.requireID())
+            .with(\.$images)
+            .first()
+        else {
+            throw Abort(.internalServerError)
+        }
+        return ArtItemListResponse(item: saved, req: req)
     }
 
     // PATCH /art-items/:id  (requires Bearer token)
