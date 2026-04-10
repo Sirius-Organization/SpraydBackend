@@ -83,7 +83,8 @@ extension ArtImage {
             url = imagePath
         } else {
             let host = req.headers.first(name: .host) ?? "localhost:8080"
-            let scheme = req.application.http.server.configuration.tlsConfiguration != nil ? "https" : "http"
+            let scheme = req.headers.first(name: "X-Forwarded-Proto")
+                ?? (req.application.http.server.configuration.tlsConfiguration != nil ? "https" : "http")
             url = "\(scheme)://\(host)/images/\(imagePath)"
         }
         return ArtImageResponse(
