@@ -15,6 +15,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - images_data:/app/Public/images
     command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
 
   db:
@@ -33,3 +35,4 @@ services:
 
 volumes:
   db_data:
+  images_data:

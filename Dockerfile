@@ -80,6 +80,9 @@ COPY --from=build --chown=vapor:vapor /staging /app
 # Provide configuration needed by the built-in crash reporter and some sensible default behaviors.
 ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace-static
 
+# Pre-create the images directory so Docker initializes the named volume with vapor ownership
+RUN mkdir -p /app/Public/images && chown vapor:vapor /app/Public/images
+
 # Ensure all further commands run as the vapor user
 USER vapor:vapor
 
